@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="org.fkit.mapper.FavoriteMapper">  
+	<resultMap type="org.fkit.domain.Favorite" id="BaseFavorite">
+		<result column="id" property="id"/>
+		<association property="goods"  javaType="org.fkit.domain.Goods">
+			<result column="id" property="id"/>
+			<result column="name" property="name"/>
+			<result column="price" property="price"/>
+			<result column="type" property="type"/>
+			<result column="image" property="image"/>
+			<result column="inventory" property="inventory"/>
+			<result column="sales" property="sales"/>
+		</association>
+		<association property="user" javaType="org.fkit.domain.User">
+			<result column="id" property="id"/>
+			<result column="username" property="username"/>
+			<result column="email" property="email"/>
+			<result column="password" property="password"/>
+		</association>
+	</resultMap>
+     
+
+     
+    <select id="findAll" parameterType="String" resultMap="BaseFavorite">  
+       select * from tb_favorite,tb_goods,tb_user where tb_favorite.user_id=tb_user.id and tb_favorite.goods_id=tb_goods.id and username=#{username}
+    </select> 
+    
+    <select id="confirmFavorite" parameterType="org.fkit.domain.Favorite" resultMap="BaseFavorite">  
+       select * from tb_favorite,tb_goods,tb_user where tb_favorite.user_id=tb_user.id and tb_favorite.goods_id=tb_goods.id and user_id=#{user.id} and goods_id=#{goods.id}
+    </select>     
+  
+    <insert id="addFavorite" parameterType="org.fkit.domain.Favorite" useGeneratedKeys="true" keyColumn="id">  
+       insert into tb_favorite(user_id,goods_id) values (#{user.id},#{goods.id}) 
+    </insert>   
+    
+    <delete id="deleteFavorite" parameterType="org.fkit.domain.Favorite">  
+       delete FROM tb_favorite WHERE id=#{id}
+    </delete>  
+    
+</mapper>  

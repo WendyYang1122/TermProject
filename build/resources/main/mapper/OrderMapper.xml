@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="org.fkit.mapper.OrderMapper">  
+	<resultMap type="org.fkit.domain.Order" id="BaseOrder">
+		<result column="id" property="id"/>
+		<result column="order_number" property="number"/>
+		<result column="order_status" property="status"/>
+		<association property="goods"  javaType="org.fkit.domain.Goods">
+			<result column="id" property="id"/>
+			<result column="name" property="name"/>
+			<result column="price" property="price"/>
+			<result column="type" property="type"/>
+			<result column="image" property="image"/>
+			<result column="inventory" property="inventory"/>
+			<result column="sales" property="sales"/>
+		</association>
+		<association property="user" javaType="org.fkit.domain.User">
+			<result column="id" property="id"/>
+			<result column="username" property="username"/>
+			<result column="email" property="email"/>
+			<result column="password" property="password"/>
+		</association>
+	</resultMap>
+     
+
+     
+    <select id="findAll" parameterType="String" resultMap="BaseOrder">  
+       select * from tb_order,tb_goods,tb_user where tb_order.user_id=tb_user.id and tb_order.goods_id=tb_goods.id and username=#{username}
+    </select>   
+    
+    <select id="bgFindAll" parameterType="String" resultMap="BaseOrder">  
+       select * from tb_order,tb_user,tb_goods where tb_order.user_id=tb_user.id and tb_order.goods_id=tb_goods.id
+    </select>   
+  
+    <insert id="addOrder" parameterType="org.fkit.domain.Order" useGeneratedKeys="true" keyColumn="id">  
+       insert into tb_order(user_id,goods_id,order_number) values (#{user.id},#{goods.id},#{number}) 
+    </insert>   
+    
+    <update id="updateOrder" parameterType="org.fkit.domain.Order">
+       update tb_order set order_status= #{status} where id = #{id}
+    </update>
+
+    
+</mapper>  
